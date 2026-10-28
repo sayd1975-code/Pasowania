@@ -1,0 +1,26 @@
+{
+  "name": "Pasowania ISO 286",
+  "short_name": "Pasowania",
+  "description": "Kalkulator pasowań ISO 286: odchyłki, granice, luz i wcisk dla otworów i wałów 0–500 mm, IT4–IT16",
+  "lang": "pl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#020617",
+  "background_color": "#020617",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-mask.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

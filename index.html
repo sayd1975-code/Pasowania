@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#020617">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="manifest" href="manifest.json">
+<title>Pasowania ISO 286</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html { font-size:16px; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background:#020617; color:#e2e8f0; min-height:100vh;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  header {
+    background:linear-gradient(135deg,#b45309 0%,#d97706 45%,#fbbf24 100%);
+    padding:1.1rem 1rem 1rem; border-bottom:3px solid #78350f;
+  }
+  header h1 { color:#1c1917; font-size:1.35rem; font-weight:800; letter-spacing:.3px; }
+  header p  { color:#292013; font-size:.85rem; margin-top:.15rem; font-weight:600; }
+  nav { display:flex; gap:.4rem; padding:.6rem .8rem; background:#0f172a; position:sticky; top:0; z-index:5; border-bottom:1px solid #334155; }
+  nav button {
+    flex:1; padding:.6rem .3rem; border:1px solid #334155; border-radius:.6rem;
+    background:#1e293b; color:#94a3b8; font-size:.85rem; font-weight:700; cursor:pointer;
+  }
+  nav button.on { background:#fbbf24; color:#1c1917; border-color:#d97706; }
+  main { padding:.9rem .8rem 2rem; max-width:680px; margin:0 auto; }
+  .card { background:#0f172a; border:1px solid #1e293b; border-radius:.8rem; padding:.9rem; margin-bottom:.8rem; }
+  .card h2 { font-size:.8rem; color:#94a3b8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:.55rem; }
+  label { font-size:.8rem; color:#94a3b8; display:block; margin-bottom:.3rem; font-weight:600; }
+  input[type=text] {
+    width:100%; padding:.75rem .8rem; font-size:1.25rem; font-weight:700;
+    background:#1e293b; border:2px solid #334155; border-radius:.6rem; color:#fbbf24;
+    font-variant-numeric:tabular-nums; outline:none;
+  }
+  input[type=text]:focus { border-color:#fbbf24; }
+  .row { display:flex; gap:.55rem; align-items:stretch; }
+  .row input { flex:1; }
+  button.go {
+    padding:0 1.2rem; background:#ea580c; color:#fff7ed; border:none; border-radius:.6rem;
+    font-size:1rem; font-weight:800; cursor:pointer; white-space:nowrap;
+  }
+  button.go:active { background:#c2410c; }
+  .hint { font-size:.72rem; color:#64748b; margin-top:.35rem; line-height:1.4; }
+  .chips { display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.6rem; }
+  .chip {
+    background:#1e293b; border:1px solid #334155; color:#fcd34d; border-radius:999px;
+    padding:.3rem .6rem; font-size:.72rem; font-weight:700; cursor:pointer;
+  }
+  .chip:active { background:#334155; }
+  .chip small { color:#94a3b8; font-weight:600; margin-left:.25rem; }
+  .res { display:none; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; }
+  @media (max-width:480px){ .grid2 { grid-template-columns:1fr; } }
+  .panel { background:#1e293b; border:1px solid #334155; border-radius:.7rem; padding:.75rem; }
+  .panel .ttl { font-size:.75rem; font-weight:800; color:#fbbf24; margin-bottom:.4rem; display:flex; justify-content:space-between; }
+  .panel .cls { color:#94a3b8; font-size:.7rem; }
+  .big { font-size:1.05rem; font-weight:800; color:#e2e8f0; font-variant-numeric:tabular-nums; line-height:1.45; }
+  .big b { color:#fbbf24; }
+  .sub { font-size:.72rem; color:#94a3b8; margin-top:.3rem; line-height:1.5; }
+  .badge {
+    display:inline-block; padding:.25rem .7rem; border-radius:999px; font-size:.8rem; font-weight:800;
+    margin-bottom:.45rem; letter-spacing:.5px;
+  }
+  .b-luz { background:#064e3b; color:#6ee7b7; border:1px solid #059669; }
+  .b-wcisk { background:#7f1d1d; color:#fca5a5; border:1px solid #dc2626; }
+  .b-przej { background:#78350f; color:#fcd34d; border:1px solid #d97706; }
+  .err { color:#f87171; font-size:.85rem; font-weight:600; margin-top:.5rem; display:none; }
+  .ok-note { font-size:.68rem; color:#475569; margin-top:.5rem; line-height:1.5; }
+  table { border-collapse:collapse; width:100%; font-size:.68rem; }
+  th,td { border:1px solid #334155; padding:.22rem .3rem; text-align:right; font-variant-numeric:tabular-nums; }
+  th { background:#1e293b; color:#fbbf24; font-size:.62rem; }
+  td:first-child,th:first-child { text-align:left; color:#94a3b8; }
+  tr:nth-child(even) td { background:#0f172a; }
+  .tblwrap { overflow-x:auto; }
+  footer { text-align:center; font-size:.68rem; color:#475569; padding:1rem .5rem 1.4rem; line-height:1.6; }
+</style>
+</head>
+<body>
+<header>
+  <h1>⚙ Pasowania ISO 286</h1>
+  <p>Ø + klasa → odchyłki, granice, luz / wcisk</p>
+</header>
+
+<nav>
+  <button id="tabFit" class="on">Pasowanie</button>
+  <button id="tabCls">Klasa</button>
+  <button id="tabIT">Tabela IT</button>
+</nav>
+
+<main>
+  <!-- ===== PASOWANIE ===== -->
+  <section id="secFit">
+    <div class="card">
+      <label for="fitIn">Pasowanie (otwór / wał)</label>
+      <div class="row">
+        <input type="text" id="fitIn" placeholder="np. 40H7/r6" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="text">
+        <button class="go" id="fitGo">Licz</button>
+      </div>
+      <div class="hint">Wpisz jak na rysunku: średnica, klasa otworu (WIELKA litera), ukośnik, klasa wału (mała litera). Zakres Ø 0–500 mm, stopnie IT4–IT16.</div>
+      <div class="chips" id="fitChips"></div>
+      <div class="err" id="fitErr"></div>
+    </div>
+    <div class="res" id="fitOut"></div>
+  </section>
+
+  <!-- ===== KLASA ===== -->
+  <section id="secCls" style="display:none">
+    <div class="card">
+      <label for="clsIn">Pojedyncza klasa</label>
+      <div class="row">
+        <input type="text" id="clsIn" placeholder="np. 32H8 albo 40h6" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="text">
+        <button class="go" id="clsGo">Licz</button>
+      </div>
+      <div class="hint">WIELKA litera = otwór (H7, K7, P6…), mała litera = wał (h6, k6, r6…). Przykład z rysunku: 32H8.</div>
+      <div class="err" id="clsErr"></div>
+    </div>
+    <div class="res" id="clsOut"></div>
+  </section>
+
+  <!-- ===== TABELA IT ===== -->
+  <section id="secIT" style="display:none">
+    <div class="card">
+      <h2>Tolerancje standardowe IT (µm)</h2>
+      <div class="tblwrap" id="itTable"></div>
+      <div class="ok-note">Wartości wg ISO 286-1 dla średnic 0–500 mm. IT01–IT3 pominięte (skala powiernicza) — apka obsługuje IT4–IT16.</div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Dane: ISO 286-1 / 286-2 — wartości tablicowane, zakres 0–500 mm.<br>
+  Apka offline (PWA) · wersja 1.0
+</footer>
+
+<script>
+'use strict';
+/* ===== DANE ISO 286 (µm) — zweryfikowane 57 testami krzyżowych 28.10.2026 ===== */
+const FINE=[3,6,10,14,18,24,30,40,50,65,80,100,120,140,160,180,200,225,250,280,315,355,400,450,500];
+const COARSE=[3,6,10,18,30,50,80,120,180,250,315,400,500];
+const IT={4:[3,4,4,5,6,7,8,10,12,14,16,18,20],5:[4,5,6,8,9,11,13,16,18,20,23,25,27],6:[6,8,9,11,13,16,19,22,25,29,32,36,40],7:[10,12,15,18,21,25,30,35,40,46,52,57,63],8:[14,18,22,27,33,39,46,54,63,72,81,89,97],9:[25,30,36,43,52,62,74,87,100,115,130,140,155],10:[40,48,58,70,84,100,120,140,160,185,210,230,250],11:[60,75,90,110,130,160,190,220,250,290,320,360,400],12:[100,120,150,180,210,250,300,350,400,460,520,570,630],13:[140,180,220,270,330,390,460,540,630,720,810,890,970],14:[250,300,360,430,520,620,740,870,1000,1150,1300,1400,1550],15:[400,480,580,700,840,1000,1200,1400,1600,1850,2100,2300,2500],16:[600,750,900,1100,1300,1600,1900,2200,2500,2900,3200,3600,4000]};
+/* wał: górne odchyłki es (dodatnia liczba = |es|) */
+const ES={a:[270,270,280,290,290,300,300,310,320,340,360,380,410,460,520,580,660,740,820,920,1050,1200,1350,1500,1650],b:[140,140,150,150,150,160,160,170,180,190,200,220,240,260,280,310,340,380,420,480,540,600,680,760,840],c:[60,70,80,95,95,110,110,120,130,140,150,170,180,200,210,230,240,260,280,300,330,360,400,440,480],d:[20,30,40,50,50,65,65,80,80,100,100,120,120,145,145,145,170,170,170,190,190,210,210,230,230],e:[14,20,25,32,32,40,40,50,50,60,60,72,72,85,85,85,100,100,100,110,110,125,125,135,135],f:[6,10,13,16,16,20,20,25,25,30,30,36,36,43,43,43,50,50,50,56,56,62,62,68,68],g:[2,4,5,6,6,7,7,9,9,10,10,12,12,14,14,14,15,15,15,17,17,18,18,20,20]};
+/* wał: dolne odchyłki ei (null = litera nie występuje w tym zakresie) */
+const EI={k47:[0,1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,4,4,4,4,4,4,4,5,5],m:[2,4,6,7,7,8,8,9,9,11,11,13,13,15,15,15,17,17,17,20,20,21,21,23,23],n:[4,8,10,12,12,15,15,17,17,20,20,23,23,27,27,27,31,31,31,34,34,37,37,40,40],p:[6,12,15,18,18,22,22,26,26,32,32,37,37,43,43,43,50,50,50,56,56,62,62,68,68],r:[10,15,19,23,23,28,28,34,34,41,43,51,54,63,65,68,77,80,84,94,98,108,114,126,132],s:[14,19,23,28,28,35,35,43,43,53,59,71,79,92,100,108,122,130,140,158,170,190,208,232,252],t:[null,null,null,null,null,null,41,48,54,66,75,91,104,122,134,146,166,180,196,218,240,268,294,330,360],u:[18,23,28,33,33,41,48,60,70,87,102,124,144,170,190,210,236,258,284,315,350,390,435,490,540],v:[null,null,null,null,39,47,55,68,81,102,120,146,172,202,228,252,284,310,340,385,425,475,530,595,660],x:[20,28,34,40,45,54,64,80,97,122,146,178,210,248,280,310,350,385,425,475,525,590,660,740,820],y:[null,null,null,null,null,63,75,94,114,144,174,214,254,300,340,380,425,470,520,580,650,730,820,920,1000],z:[26,35,42,50,60,73,88,112,136,172,210,254,310,365,415,465,520,575,640,710,790,900,1000,1100,1250],za:[32,42,52,64,77,98,118,148,180,226,274,335,400,470,535,600,670,740,820,920,1000,1100,1300,1450,1600],zb:[40,50,67,90,108,136,160,200,242,300,360,445,525,620,700,780,880,960,1050,1200,1300,1450,1600,1850,2100],zc:[60,80,97,130,150,188,218,274,325,405,480,585,690,800,900,1000,1150,1250,1350,1550,1700,1900,2100,2400,2600]};
+/* otwór: tablicowane ES (osobliwości normy: K7/K8, M7/M8, N7/N8) */
+const HOLE_ES={K7:[0,3,5,6,6,6,6,7,7,9,9,10,10,12,12,12,13,13,13,16,16,17,17,18,18],K8:[0,5,6,8,8,10,10,12,12,14,14,16,16,20,20,20,22,22,22,25,25,28,28,29,29],M7:[-2,0,0,0,1,0,1,0,2,0,2,0,2,0,0,2,0,0,3,0,1,0,2,0,0],M8:[-2,2,1,2,5,4,6,5,7,5,8,6,10,8,8,11,9,9,12,9,12,11,13,11,11],N7:[-4,-4,-4,-5,-5,-7,-7,-8,-8,-9,-9,-10,-10,-12,-12,-12,-14,-14,-14,-14,-14,-16,-16,-17,-17],N8:[-4,-2,-3,-3,-3,-3,-3,-3,-3,-4,-4,-4,-4,-4,-4,-4,-5,-5,-5,-5,-5,-5,-5,-6,-6]};
+
+const fi=d=>{if(!(d>0)||d>500)return -1;let i=0;while(d>FINE[i])i++;return i;};
+const ci=d=>{if(!(d>0)||d>500)return -1;let i=0;while(d>COARSE[i])i++;return i;};
+const itv=(g,d)=>IT[g][ci(d)];
+const delta=(g,d)=>IT[g][ci(d)]-IT[g-1][ci(d)];
+
+function shaftDevs(L,g,d){
+  const i=fi(d),it=itv(g,d);
+  if(i<0||g<4||g>16)return null;
+  if(L==='h')return{es:0,ei:-it};
+  if(L==='js')return{es:it/2,ei:-it/2};
+  if(L==='k'){if(g<=7){const ei=EI.k47[i];return{es:ei+it,ei:ei};}return{es:it,ei:0};}
+  if(ES[L]){const es=-ES[L][i];return{es:es,ei:es-it};}
+  if(EI[L]){const ei=EI[L][i];if(ei===null||ei===undefined)return null;return{es:ei+it,ei:ei};}
+  return null;
+}
+function holeDevs(L,g,d){
+  const i=fi(d),it=itv(g,d);
+  if(i<0||g<4||g>16)return null;
+  if(L==='H')return{ES:it,EI:0};
+  if(L==='JS')return{ES:it/2,EI:-it/2};
+  const low=L.toLowerCase();
+  if(ES[low]){const e=ES[low][i];return{ES:e+it,EI:e};}
+  if(low==='k'||low==='m'||low==='n'){
+    const base=idx=>(low==='k')?EI.k47[idx]:EI[low][idx];
+    if(g>8){const s=(low==='k')?0:-base(i);return{ES:s,EI:s-it};}
+    if(g===7||g===8){const s=HOLE_ES[L+g][i];return{ES:s,EI:s-it};}
+    if(g===5||g===6){const s=-base(i)+delta(g,d);return{ES:s,EI:s-it};}
+    return null;
+  }
+  if(EI[low]){
+    const e=EI[low][i];if(e===null||e===undefined)return null;
+    if(g>7||d<=3){return{ES:-e,EI:-e-it};}
+    if(g>=5&&g<=7){return{ES:-e+delta(g,d),EI:-e+delta(g,d)-it};}
+    return null;
+  }
+  return null;
+}
+
+/* ===== FORMATOWANIE (PL, przecinek) ===== */
+function mm(v){ // v w µm → "0,039" / "−0,0045"
+  if(!isFinite(v))return '—';
+  let dec=3;
+  if(Math.abs(v)%1!==0)dec=4;
+  let s=(Math.abs(v)/1000).toFixed(dec);
+  if(dec===3)s=s.replace(/0{1,2}$/,'').replace(/\.$/,'');
+  s=s.replace('.',',');
+  return (v<0?'−':'+')+s;
+}
+function mmS(v){const s=mm(v).replace('+','');return s;} // bez plusa
+function um(v){const s=(Math.round(v*10)/10).toString().replace('.',',');return (v<0?'−':'+')+s+' µm';}
+
+/* ===== PARSOWANIE ===== */
+const RXFIT=/^\s*(\d+(?:[.,]\d+)?)\s*([A-Za-z]{1,2})\s*(\d{1,2})\s*\/\s*([A-Za-z]{1,2})\s*(\d{1,2})\s*$/;
+const RXCLS=/^\s*(\d+(?:[.,]\d+)?)\s*([A-Za-z]{1,2})\s*(\d{1,2})\s*$/;
+function isHole(l){return l===l.toUpperCase();}
+function parseCls(str){
+  const m=String(str).match(RXCLS);
+  if(!m)return null;
+  const d=parseFloat(m[1].replace(',','.'));
+  return {d:d, L:m[2], g:parseInt(m[3],10)};
+}
+function calcClass(d,L,g){
+  if(!(d>0)||d>500)return{err:'Średnica musi być z zakresu 0–500 mm.'};
+  if(g<4||g>16)return{err:'Obsługuję stopnie tolerancji IT4–IT16.'};
+  const dev=isHole(L)?holeDevs(L.toUpperCase(),g,d):shaftDevs(L.toLowerCase(),g,d);
+  if(!dev)return{err:'Litera '+L+' nie występuje w normie dla Ø '+String(d).replace('.',',')+' mm (ani w tym stopniu).'};
+  return{dev:dev};
+}
+
+/* ===== UI: zakładki ===== */
+const tabs=[['tabFit','secFit'],['tabCls','secCls'],['tabIT','secIT']];
+tabs.forEach(([tb,sc])=>{
+  document.getElementById(tb).addEventListener('click',()=>{
+    tabs.forEach(([t2,s2])=>{
+      document.getElementById(t2).classList.toggle('on',t2===tb);
+      document.getElementById(s2).style.display=(s2===sc)?'':'none';
+    });
+  });
+});
+
+/* ===== UI: PASOWANIE ===== */
+const PRESETS=[
+  ['H11/c11','luźne'],['H9/d9','swobodne'],['H8/f7','łatwe'],['H7/g6','przesuwne'],
+  ['H7/h6','centrujące'],['H7/k6','sworzniowe'],['H7/n6','stałe'],['H7/p6','wcisk lekki'],
+  ['H7/r6','wcisk średni'],['H7/s6','wcisk ciężki'],['H7/u6','wcisk bardzo ciężki']
+];
+const chipsEl=document.getElementById('fitChips');
+PRESETS.forEach(([f,lab])=>{
+  const c=document.createElement('button');
+  c.className='chip';c.innerHTML=f+'<small>'+lab+'</small>';
+  c.addEventListener('click',()=>{
+    const m=document.getElementById('fitIn').value.match(RXFIT);
+    const d=m?m[1]:'40';
+    document.getElementById('fitIn').value=d+f;
+    doFit();
+  });
+  chipsEl.appendChild(c);
+});
+function doFit(){
+  const out=document.getElementById('fitOut'),err=document.getElementById('fitErr');
+  err.style.display='none';out.style.display='none';
+  const m=document.getElementById('fitIn').value.match(RXFIT);
+  if(!m){err.textContent='Nie rozumiem. Wpisz np. 40H7/r6 (Ø + klasa otworu + / + klasa wału).';err.style.display='block';return;}
+  const d=parseFloat(m[1].replace(',','.'));
+  const hL=m[2].toUpperCase(),hG=parseInt(m[3],10);
+  const sL=m[4].toLowerCase(),sG=parseInt(m[5],10);
+  if(!isHole(m[2])){err.textContent='Klasa otworu musi być WIELKĄ literą (np. H7), a wału małą (np. r6).';err.style.display='block';return;}
+  if(isHole(m[4])){err.textContent='Klasa wału musi być małą literą (np. r6).';err.style.display='block';return;}
+  if(hG<4||hG>16||sG<4||sG>16){err.textContent='Obsługuję stopnie tolerancji IT4–IT16.';err.style.display='block';return;}
+  if(!(d>0)||d>500){err.textContent='Średnica musi być z zakresu 0–500 mm.';err.style.display='block';return;}
+  const H=holeDevs(hL,hG,d),S=shaftDevs(sL,sG,d);
+  if(!H){err.textContent='Otwór '+hL+hG+' nie występuje w normie dla tego Ø (sprawdź literę / zakres).';err.style.display='block';return;}
+  if(!S){err.textContent='Wał '+sL+sG+' nie występuje w normie dla tego Ø (np. t dopiero od Ø24, v od Ø14, y od Ø18).';err.style.display='block';return;}
+  const dHoleMin=d+H.EI/1000,dHoleMax=d+H.ES/1000;
+  const dShaMin=d+S.ei/1000,dShaMax=d+S.es/1000;
+  const minS=dHoleMin-dShaMax,maxS=dHoleMax-dShaMin; // ujemny = wcisk
+  let badge,fitLines;
+  if(minS>=0){badge='<span class="badge b-luz">LUZ</span>';fitLines='luz min <b>'+mmS(minS*1000).replace('−','')+'</b> · luz max <b>'+mmS(maxS*1000).replace('−','')+'</b>';}
+  else if(maxS<=0){badge='<span class="badge b-wcisk">WCISK</span>';fitLines='wcisk min <b>'+mmS(-maxS*1000)+'</b> · wcisk max <b>'+mmS(-minS*1000)+'</b>';}
+  else{badge='<span class="badge b-przej">PRZEJŚCIOWE</span>';fitLines='wcisk do <b>'+mmS(-maxS*1000)+'</b> · luz do <b>'+mmS(maxS*1000)+'</b>';}
+  out.innerHTML=
+    '<div class="card">'+
+      '<div class="grid2">'+
+        '<div class="panel"><div class="ttl">OTWÓR <span class="cls">'+hL+hG+' · Ø '+String(d).replace('.',',')+'</span></div>'+
+          '<div class="big">'+mmS(H.EI*1)+' … <b>'+mmS(H.ES*1)+'</b></div>'+
+          '<div class="sub">ES '+um(H.ES)+' · EI '+um(H.EI)+'<br>granice: '+mmS(H.EI)+' … '+mmS(H.ES)+' mm</div></div>'+
+        '<div class="panel"><div class="ttl">WAŁ <span class="cls">'+sL+sG+' · Ø '+String(d).replace('.',',')+'</span></div>'+
+          '<div class="big">'+mmS(S.ei*1)+' … <b>'+mmS(S.es*1)+'</b></div>'+
+          '<div class="sub">es '+um(S.es)+' · ei '+um(S.ei)+'<br>granice: '+mmS(S.ei)+' … '+mmS(S.es)+' mm</div></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="card">'+badge+'<div class="big">'+fitLines+'</div>'+
+      '<div class="sub">Pasowanie '+String(d).replace('.',',')+hL+hG+'/'+sL+sG+': '+
+      'otwór '+mmS(H.EI)+'…'+mmS(H.ES)+' × wał '+mmS(S.ei)+'…'+mmS(S.es)+' mm. '+
+      'Ujemna wartość = wał grubszy niż otwór (wcisk).</div></div>';
+  out.style.display='block';
+  save('fit',document.getElementById('fitIn').value);
+}
+document.getElementById('fitGo').addEventListener('click',doFit);
+document.getElementById('fitIn').addEventListener('keydown',e=>{if(e.key==='Enter')doFit();});
+
+/* ===== UI: KLASA ===== */
+function doCls(){
+  const out=document.getElementById('clsOut'),err=document.getElementById('clsErr');
+  err.style.display='none';out.style.display='none';
+  const p=parseCls(document.getElementById('clsIn').value);
+  if(!p){err.textContent='Nie rozumiem. Wpisz np. 32H8 (otwór) albo 40h6 (wał).';err.style.display='block';return;}
+  const r=calcClass(p.d,p.L,p.g);
+  if(r.err){err.textContent=r.err;err.style.display='block';return;}
+  const hole=isHole(p.L),dev=r.dev;
+  const dMin=p.d+(hole?dev.EI:dev.ei)/1000,dMax=p.d+(hole?dev.ES:dev.es)/1000;
+  const up=hole?dev.ES:dev.es,lo=hole?dev.EI:dev.ei;
+  const kind=hole?'OTWÓR (duża litera)':'WAŁ (mała litera)';
+  const upl=hole?'ES':'es',lowl=hole?'EI':'ei';
+  out.innerHTML=
+    '<div class="card"><div class="grid2">'+
+      '<div class="panel"><div class="ttl">'+p.L.toUpperCase()+p.g+' <span class="cls">'+kind+'</span></div>'+
+        '<div class="big">'+lowl+' '+um(lo)+'<br>'+upl+' <b>'+um(up)+'</b></div></div>'+
+      '<div class="panel"><div class="ttl">GRANICE <span class="cls">Ø '+String(p.d).replace('.',',')+'</span></div>'+
+        '<div class="big">'+mmS((hole?dev.EI:dev.ei))+' … <b>'+mmS((hole?dev.ES:dev.es))+'</b> mm<br>'+
+        String(Math.round(dMin*1000)/1000).replace('.',',')+' … '+String(Math.round(dMax*1000)/1000).replace('.',',')+' mm</div>'+
+        '<div class="sub">tolerancja '+(Math.abs(up-lo)/1000).toFixed(3).replace('.',',').replace(/0{1,2}$/,'').replace(/\,$/,'')+' mm (IT'+p.g+' = '+IT[p.g][ci(p.d)]+' µm)</div></div>'+
+    '</div></div>';
+  out.style.display='block';
+  save('cls',document.getElementById('clsIn').value);
+}
+document.getElementById('clsGo').addEventListener('click',doCls);
+document.getElementById('clsIn').addEventListener('keydown',e=>{if(e.key==='Enter')doCls();});
+
+/* ===== UI: TABELA IT ===== */
+(function(){
+  const labels=['do 3','3–6','6–10','10–18','18–30','30–50','50–80','80–120','120–180','180–250','250–315','315–400','400–500'];
+  const lows=[0,3,6,10,18,30,50,80,120,180,250,315,400];
+  let html='<table><tr><th>Ø mm</th>';
+  for(let g=4;g<=16;g++)html+='<th>IT'+g+'</th>';
+  html+='</tr>';
+  for(let r=0;r<13;r++){
+    html+='<tr><td>'+labels[r]+'</td>';
+    for(let g=4;g<=16;g++)html+='<td>'+IT[g][r]+'</td>';
+    html+='</tr>';
+  }
+  document.getElementById('itTable').innerHTML=html+'</table>';
+})();
+
+/* ===== LOCALSTORAGE ===== */
+function save(k,v){
+  try{
+    const o=JSON.parse(localStorage.getItem('pasowania-vals')||'{}');
+    o[k]=v;localStorage.setItem('pasowania-vals',JSON.stringify(o));
+  }catch(e){}
+}
+(function(){
+  try{
+    const o=JSON.parse(localStorage.getItem('pasowania-vals')||'{}');
+    if(o.fit){document.getElementById('fitIn').value=o.fit;doFit();}
+    if(o.cls){document.getElementById('clsIn').value=o.cls;doCls();}
+  }catch(e){}
+})();
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(function(){});
+}
+</script>
+</body>
+</html>

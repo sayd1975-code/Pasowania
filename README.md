@@ -21,7 +21,7 @@ i dostaniesz odchyłki, granice oraz charakter pasowania (luz / przejściowe / w
 ## Dane i weryfikacja
 Wartości **tablicowane** wg ISO 286-1/2 (nie liczone z formuł!). Źródła: cobanengineering.com
 (Fundamental Deviation / Upper and Lower Deviations dla wałów i otworów), skrosowane z tablicami
-ISO 286-2 (TUKE/simplybearings) i klasycznymi pasowaniami. Silnik przeszedł 57 testów
+ISO 286-2 (TUKE/simplybearings) i klasycznymi pasowaniami. Silnik przeszedł 58 testów
 krzyżowych (m.in. 32H8=+0,039/0, 40H7/r6 wcisk 0,009–0,050, 25H7/u6 wcisk 0,027–0,061,
 20K7=+6/−15, 70M7=+2/−28, 30X7=−56/−77).
 
